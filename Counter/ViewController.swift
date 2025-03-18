@@ -9,32 +9,31 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var counterValue: Int = 0 {
+    //значение счетчика
+    private var counterValue: Int = 0 {
         didSet{
             updateCounterLabel()
         }
     }
     
-    var historyValue: String = "История изменений:" {
+    //история изменений
+    private var historyValue: String = "История изменений:" {
         didSet{
             updatehistoryValue()
         }
     }
     
-    private func updateHistory(_ value:String){
-        historyValue = historyValue + "\n" +
-        "[" + getTimeStamp() + "]: " + value
+    //Text View с историей изменений
+    @IBOutlet weak private var historyCounterTextView: UITextView!
+    
+    //Label счетчика
+    @IBOutlet weak private var counterLabel: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
     
-
-    private func updatehistoryValue() {
-        historyCounterTextView.text = historyValue
-    }
-    
-    private func updateCounterLabel() {
-        counterLabel.text = "Значение счетчика: \(counterValue)"
-    }
-    
+    //функция получения отформатированного текущего timestamp
     private func getTimeStamp() -> String {
         let date = Date()
         let formatter = DateFormatter()
@@ -42,16 +41,30 @@ class ViewController: UIViewController {
         return formatter.string(from: date)
     }
     
-    @IBOutlet weak var historyCounterTextView: UITextView!
+    //форматирование сообщения в историю изменений по ТЗ - "[date time]: %message"
+    private func updateHistory(_ value:String){
+        historyValue = historyValue + "\n" +
+        "[" + getTimeStamp() + "]: " + value
+    }
     
-    @IBOutlet weak var counterLabel: UILabel!
+    //обновление истории изменения в Text View
+    private func updatehistoryValue() {
+        historyCounterTextView.text = historyValue
+    }
     
-    @IBAction func counterIncreaserButtonDidTap(_ sender: Any) {
+    //обновление значения Label счетчика
+    private func updateCounterLabel() {
+        counterLabel.text = "Значение счетчика: \(counterValue)"
+    }
+    
+    //событие на нажатие кнопки +
+    @IBAction private func counterIncreaserButtonDidTap(_ sender: Any) {
         counterValue += 1
         updateHistory("значение изменено на +1")
-        
     }
-    @IBAction func counterDecreaserButtonDidTap(_ sender: Any) {
+    
+    //событие на нажатие кнопки -
+    @IBAction private func counterDecreaserButtonDidTap(_ sender: Any) {
         if counterValue == 0 {
             updateHistory("попытка уменьшить значение счётчика ниже 0")
             return
@@ -59,15 +72,10 @@ class ViewController: UIViewController {
         counterValue -= 1
         updateHistory("значение изменено на -1")
     }
-    @IBAction func counterResetButtonDidTap(_ sender: Any) {
+    
+    //событие на нажатие кнопки reset
+    @IBAction private func counterResetButtonDidTap(_ sender: Any) {
         counterValue = 0
         updateHistory("значение сброшено")
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-    }
-
-
 }
-
